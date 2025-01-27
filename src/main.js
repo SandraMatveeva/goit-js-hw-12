@@ -24,6 +24,15 @@ const onSearchFormSubmit = async event => {
     event.preventDefault();
 
     searchInputQuery = event.currentTarget.elements.user_gallery.value.trim();
+
+    if (searchInputQuery === '') {
+      iziToast.show({
+        message: `❌ Sorry,Please, try again!`,
+        color: 'red',
+        position: 'topRight',
+      });
+      return;
+    }
     galleryEl.innerHTML = '';
     searchFormEl.reset();
 
@@ -55,7 +64,6 @@ const onSearchFormSubmit = async event => {
       });
     }
 
-    lightbox.refresh();
     const totalLoadedImages = page * 15;
 
     if (response.data.totalHits > totalLoadedImages) {
@@ -77,7 +85,10 @@ const onLoadMoreBtnClick = async event => {
       .map(el => createGalleryCardTemplate(el))
       .join('');
 
+    console.log('ggggg');
+
     galleryEl.insertAdjacentHTML('beforeend', galleryTemplate);
+    lightbox.refresh();
 
     const { height: cardHeight } =
       galleryEl.firstElementChild.getBoundingClientRect();
