@@ -19,6 +19,7 @@ const loadMoreBtn = document.querySelector('.js-btn-load-more');
 let page = 1;
 let searchInputQuery = '';
 
+//#region
 const onSearchFormSubmit = async event => {
   try {
     event.preventDefault();
@@ -27,7 +28,7 @@ const onSearchFormSubmit = async event => {
 
     if (searchInputQuery === '') {
       iziToast.show({
-        message: `❌ Sorry,Please, try again!`,
+        message: `❌ Sorry, search field is empty. Please, try again!`,
         color: 'red',
         position: 'topRight',
       });
@@ -55,6 +56,7 @@ const onSearchFormSubmit = async event => {
       .join('');
 
     galleryEl.innerHTML = galleryTemplate;
+    lightbox.refresh();
 
     if (response.data.hits.length === 0) {
       iziToast.show({
@@ -68,6 +70,8 @@ const onSearchFormSubmit = async event => {
 
     if (response.data.totalHits > totalLoadedImages) {
       loadMoreBtn.classList.remove('is-hidden');
+
+      loadMoreBtn.removeEventListener('click', onLoadMoreBtnClick);
       loadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
     }
   } catch (error) {
@@ -84,8 +88,6 @@ const onLoadMoreBtnClick = async event => {
     const galleryTemplate = response.data.hits
       .map(el => createGalleryCardTemplate(el))
       .join('');
-
-    console.log('ggggg');
 
     galleryEl.insertAdjacentHTML('beforeend', galleryTemplate);
     lightbox.refresh();
@@ -112,6 +114,8 @@ const onLoadMoreBtnClick = async event => {
     console.log(error);
   }
 };
+
+//#endregion
 
 // Ініціалізація SimpleLightbox
 let lightbox = new SimpleLightbox('.gallery-link', {
